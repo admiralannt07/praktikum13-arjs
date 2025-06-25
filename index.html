@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>AR.js Naruto Shippuden</title>
+    <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/studio-backend/master/src/modules/marker/tools/gesture-detector.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/studio-backend/master/src/modules/marker/tools/gesture-handler.js"></script>
+</head>
+<body style="margin: 0; overflow: hidden;">
+    <a-assets>
+      <a-asset-item id="naruto" src="model/naruto_uzumaki_running_animation.glb"></a-asset-item>
+      <a-asset-item id="kakashi" src="model/kakashi.glb"></a-asset-item>
+      <audio id="naruto_alive" src="audio/naruto_alive.mp3" preload="auto"></audio>
+    </a-assets>
+
+    <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
+      
+      <a-marker preset="hiro">
+        <a-entity
+          id="naruto_model" position="-1 0 0"
+          scale="0.8 0.8 0.8"
+          rotation="0 90 0"
+          animation-mixer
+
+          gltf-model="#naruto"
+          gesture-handler
+          animation-mixer="clip: mixamo.com; loop: repeat; crossFadeDuration: 1; timeScale: 0;"
+          sound="src: #naruto_alive; autoplay: false; loop: true;">
+          
+        </a-entity>
+        <a-entity
+          id="kakashi_model" position="1 0 0"
+          scale="0.9 0.9 0.9"
+          rotation="0 -90 0"
+          animation-mixer
+
+          gltf-model="#kakashi"
+          gesture-handler
+          animation-mixer="clip: idle; loop: repeat; crossFadeDuration: 1; timeScale: 0">         
+        </a-entity>
+      </a-marker>
+
+      <a-entity camera></a-entity>
+    </a-scene>
+
+    <script>
+        var marker = document.querySelector('a-marker');
+        var narutoEntity = document.querySelector('#naruto_model');
+        
+        marker.addEventListener('markerFound', function() {
+            // Play the sound attached to the naruto entity
+            narutoEntity.components.sound.playSound();
+        });
+        
+        marker.addEventListener('markerLost', function() {
+            // Stop the sound attached to the naruto entity
+            narutoEntity.components.sound.stopSound();
+        });
+    </script>
+</body>
+</html>
